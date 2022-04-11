@@ -13,13 +13,10 @@ import {
   Columns,
   Column,
   Box,
-  CTAContainer
 } from './content/StyledContent'
-import Button from './Button'
 import { NOTES } from './constants/displayBoxNotes'
 import { INFO } from './constants/patternInfo'
 
-import GithubLogo from './assets/github_logo.svg'
 import InfoIllustration from './assets/light_bulb.svg'
 import { useAnimatedBulb } from './content/useAnimatedBulb'
 import { useAnimatedInfo } from './content/useAnimatedInfo'
@@ -149,11 +146,6 @@ const RouteComponent = ({ pattern, patternNumber, isMediumOrLarger }) => {
           <Box isPrimary note={NOTES[patternNumber]}>
             <Demo1 />
           </Box>
-          {isMediumOrLarger && (
-            <CTAContainer alignRight>
-              <Button text={`Why ${title}?`} primary />
-            </CTAContainer>
-          )}
         </Column>
         <Column leftGap>
           <Box
@@ -162,18 +154,6 @@ const RouteComponent = ({ pattern, patternNumber, isMediumOrLarger }) => {
           >
             <Demo2 />
           </Box>
-          {!isMediumOrLarger && (
-            <CTAContainer>
-              <Button text={`Why ${title}?`} primary />
-            </CTAContainer>
-          )}
-          <CTAContainer mtop={!isMediumOrLarger && '10px'}>
-            <Button
-              text='Code Implementation'
-              Icon={<GithubLogo style={{ width: '18px' }} />}
-              onClick={goToCodeImplementatiomn}
-            />
-          </CTAContainer>
         </Column>
       </Columns>
     </StyledContentContainer>

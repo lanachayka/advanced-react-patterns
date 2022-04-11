@@ -19,7 +19,7 @@ const CTAContainer = styled.div`
 
 const goToGithub = () => {
   const newWindow = window.open(
-    'https://github.com/ohansemmanuel/advanced-react-patterns-ultrasimplified'
+    'https://github.com/lanachayka/advanced-react-patterns'
   )
   newWindow.opener = null
 }
