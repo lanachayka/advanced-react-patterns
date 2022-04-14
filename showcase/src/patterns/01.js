@@ -149,4 +149,11 @@ const ClapTotal = ({ countTotal }) => {
   return <span id='clapCountTotal' className={styles.total}>{countTotal}</span>
 }
 
-export default withClapAnimation(MediumClap)
+// Usage
+
+const Usage = () => {
+  const AnimatedMediumClap = withClapAnimation(MediumClap)
+  return <AnimatedMediumClap />
+}
+
+export default Usage
