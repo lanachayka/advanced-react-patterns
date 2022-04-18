@@ -111,6 +111,10 @@ const useDOMRef = () => {
     return [DOMRef, setRef]
 }
 
+const callFnsInSequence = (...fns) => (...args) => {
+    fns.forEach(fn => fn && fn(...args))
+}
+
 // custom hook for useClapState
 const useClapState = (initialState = INITIAL_STATE) => {
     const MAXIMUM_USER_CLAP = 50
@@ -124,19 +128,21 @@ const useClapState = (initialState = INITIAL_STATE) => {
         }))
     }, [count, countTotal])
 
-    const togglerProps = {
-        handleClick: updateClapState,
+    const getTogglerProps = ({ handleClick, ...otherProps } = {}) => ({
+        handleClick: callFnsInSequence(updateClapState, handleClick),
         'aria-pressed': clapState.isClicked,
-    }
-  
-    const counterProps = {
+        ...otherProps
+    })
+
+    const getCounterProps = ({ ...otherProps }) => ({
         count,
         'aria-valuemax': MAXIMUM_USER_CLAP,
         'aria-valuemin': 0,
         'aria-valuenow': count,
-    }
+        ...otherProps
+    })
 
-    return { clapState, updateClapState, togglerProps, counterProps }
+    return { clapState, updateClapState, getTogglerProps, getCounterProps }
 }
 
 // custom useEffectAfterMount hook
@@ -152,7 +158,7 @@ const useEffectAfterMount = (cb, deps) => {
 
 // Subcomponents
 
-const ClapContainer = ({ children, setRef, handleClick, ...restProps}) => {
+const ClapContainer = ({ children, setRef, handleClick, ...restProps }) => {
     return (
         <button
             ref={setRef}
@@ -181,7 +187,7 @@ const ClapIcon = ({ isClicked }) => {
 
 const ClapCount = ({ count, setRef, ...restProps }) => {
     return <span
-        ref={setRef} 
+        ref={setRef}
         className={styles.count}
         {...restProps}
     >+ {count}</span>
@@ -198,7 +204,7 @@ const ClapTotal = ({ countTotal, setRef, ...restProps }) => {
 // Usage
 
 const Usage = () => {
-    const { clapState, updateClapState, togglerProps, counterProps } = useClapState()
+    const { clapState, updateClapState, getTogglerProps, getCounterProps } = useClapState()
     const { count, countTotal, isClicked } = clapState
     const [{ clapRef, clapCountRef, clapCountTotalRef }, setRef] = useDOMRef()
 
@@ -215,11 +221,11 @@ const Usage = () => {
     return (
         <ClapContainer
             setRef={setRef}
-            {...togglerProps}
+            {...getTogglerProps({ handleClick: () => console.log('CLICKED!!!') })}
             data-refkey='clapRef'
         >
             <ClapIcon isClicked={isClicked} />
-            <ClapCount {...counterProps} setRef={setRef} data-refkey='clapCountRef' />
+            <ClapCount {...getCounterProps()} setRef={setRef} data-refkey='clapCountRef' />
             <ClapTotal countTotal={countTotal} setRef={setRef} data-refkey='clapCountTotalRef' />
         </ClapContainer>
     )
